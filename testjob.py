@@ -19,9 +19,7 @@ def make_workdir_and_test_spec(workdir,message = 'Hello World'):
    }
    return spec
 
-   proxy = backend.submit(spec)
-   return proxy
-
 if __name__ == '__main__':
-   proxy = make_workdir_and_test_spec(sys.argv[1])
+   spec = make_workdir_and_test_spec(sys.argv[1])
+   proxy = backend.submit(spec)
    print(json.dumps(proxy))
