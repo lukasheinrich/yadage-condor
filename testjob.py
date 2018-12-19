@@ -8,4 +8,4 @@ spec = {
 }
 
 proxy = backend.submit(spec)
-print(proxy)
+print(json.dumps(proxy))
