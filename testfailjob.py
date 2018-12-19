@@ -11,7 +11,7 @@ def make_workdir_and_test_spec(workdir,message = 'Hello World'):
    os.makedirs(workdir)
    spec = {
       'image': 'lukasheinrich/busyboxwithafsdir',
-      'argv': ['sh','-c','echo {message} > {workdir}/callbackdir.txt'.format(
+      'argv': ['sh','-c','nonononononononono'.format(
          message = message,
          workdir = workdir
       )],

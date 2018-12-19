@@ -48,6 +48,7 @@ class CondorBackend(object):
         
     def submit(self, race_spec):
         script = '''#!/bin/sh
+set -e
 echo "::: hello, running container :::"
 {singularity_command}
 echo "::: done :::"
@@ -85,7 +86,7 @@ queue 1
 
         out,err = subprocess.Popen(['condor_submit','-'], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE).communicate(submit)
         proxyfile = [l for l in out.split('\n') if 'UserLog' in l][0].split('=')[-1].replace('"','').strip()
-        return {'proxyfile': proxyfile}
+        return {'proxyfile': proxyfile, 'scriptfile': runscript.name}
 
     def status(self, proxy):
         data = json.loads(subprocess.Popen(['condor_history','-json','-userlog',proxy['proxyfile']], stdout = subprocess.PIPE).communicate()[0])[0]
@@ -96,7 +97,7 @@ queue 1
 
     def successful(self,resultproxy):
         status = self.status(resultproxy)
-        return self.status_dict[status['JobStatus']] == 'Completed' and status['Exit'] == 0
+        return self.status_dict[status['JobStatus']] == 'Completed' and status['ExitCode'] == 0
 
     def fail_info(self,resultproxy):
         return 'not sure why it failed'
