@@ -40,6 +40,7 @@ class CondorBackend(object):
     def __init__(self,global_state_share = '/afs', backend_share = None):
         self.global_state_share = global_state_share  # hacky for singularity
         self.backend_share = backend_share or os.path.abspath(os.curdir)
+        self.jobflavor = 'espresso'
         for subdir in ['log','error','output','scripts']:
             d = os.path.join(self.backend_share, subdir)
             if not os.path.exists(d):
@@ -69,11 +70,16 @@ output      = {backend_share}/output/hello.$(ClusterId).$(ProcId).out.
 error       = {backend_share}/error/hello.$(ClusterId).$(ProcId).err
 log         = {backend_share}/log/hello.$(ClusterId).log
 getenv      = True
-+JobFlavour = "espresso"
++JobFlavour = "{flavor}"
 should_transfer_files   = IF_NEEDED
 when_to_transfer_output = ON_EXIT
 queue 1
-    '''.format(runscript = runscript.name, backend_share = self.backend_share)
+    '''.format(
+            runscript = runscript.name,
+            backend_share = self.backend_share,
+            flavor = self.jobflavor
+
+        )
 
         print('submitting\n{0}'.format(submit))
 
