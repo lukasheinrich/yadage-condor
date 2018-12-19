@@ -67,9 +67,9 @@ echo "::: bye :::"
         submit = '''
 executable  = {runscript}
 arguments   = $(ClusterID) $(ProcId)
-output      = {backend_share}/output/hello.$(ClusterId).$(ProcId).out.
-error       = {backend_share}/error/hello.$(ClusterId).$(ProcId).err
-log         = {backend_share}/log/hello.$(ClusterId).log
+output      = {backend_share}/output/pack.$(ClusterId).$(ProcId).out
+error       = {backend_share}/error/pack.$(ClusterId).$(ProcId).err
+log         = {backend_share}/log/pack.$(ClusterId).log
 getenv      = True
 +JobFlavour = "{flavor}"
 should_transfer_files   = IF_NEEDED
