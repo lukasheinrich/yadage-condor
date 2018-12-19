@@ -41,7 +41,7 @@ class CondorBackend(object):
         self.global_state_share = global_state_share  # hacky for singularity
         self.backend_share = backend_share or os.abspath(os.curdir)
         for subdir in ['log','error','output']:
-            d = os.path.join(self.backend_share, subdir):
+            d = os.path.join(self.backend_share, subdir)
             if not os.path.exists(d):
                 os.path.makedirs(d)
         
@@ -53,7 +53,7 @@ echo "::: done :::"
 echo "::: pwd :::"
 ls -lrt
 echo "::: bye :::"
-    '''.format(singularity_command = make_singularity_command(race_spec, config = {'global_state_share': self.global_state_share}))
+    '''.format(singularity_command = race2singularity(race_spec, config = {'global_state_share': self.global_state_share}))
 
         print(script)
 
@@ -83,4 +83,4 @@ queue 1
 
     def status(self, proxy):
         data = json.loads(subprocess.Popen(['condor_history','-json','-userlog',proxy['proxyfile']], stdout = subprocess.PIPE).communicate()[0])[0]
-        return status_dict[data['JobStatus']]
+        return self.status_dict[data['JobStatus']]
