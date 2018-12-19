@@ -4,7 +4,7 @@ import pipes
 import tempfile
 import subprocess
 
-def race2singularity(self, race_spec, config):
+def race2singularity(race_spec, config):
     global_state_mounts = [{
         'type': 'bind',
         'source': config['global_state_share'],
@@ -39,11 +39,11 @@ class CondorBackend(object):
 
     def __init__(self,global_state_share = '/afs', backend_share = None):
         self.global_state_share = global_state_share  # hacky for singularity
-        self.backend_share = backend_share or os.abspath(os.curdir)
-        for subdir in ['log','error','output']:
+        self.backend_share = backend_share or os.path.abspath(os.curdir)
+        for subdir in ['log','error','output','scripts']:
             d = os.path.join(self.backend_share, subdir)
             if not os.path.exists(d):
-                os.path.makedirs(d)
+                os.makedirs(d)
         
     def submit(self, race_spec):
         script = '''#!/bin/sh
@@ -57,7 +57,7 @@ echo "::: bye :::"
 
         print(script)
 
-        runscript = tempfile.NamedTemporaryFile(dir = 'condor/scripts', delete = False)
+        runscript = tempfile.NamedTemporaryFile(dir = '{shr}/scripts'.format(shr = self.backend_share), delete = False)
         runscript.write(script)
         runscript.close()
         os.chmod(runscript.name,0o755)
