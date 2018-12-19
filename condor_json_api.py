@@ -89,4 +89,14 @@ queue 1
 
     def status(self, proxy):
         data = json.loads(subprocess.Popen(['condor_history','-json','-userlog',proxy['proxyfile']], stdout = subprocess.PIPE).communicate()[0])[0]
-        return self.status_dict[data['JobStatus']]
+        return data
+
+    def ready(self,resultproxy):
+        return self.status_dict[self.status(resultproxy)['JobStatus']] == 'Completed'
+
+    def successful(self,resultproxy):
+        status = self.status(resultproxy)
+        return self.status_dict[status['JobStatus']] == 'Completed' and status['Exit'] == 0
+
+    def fail_info(self,resultproxy):
+        return 'not sure why it failed'
