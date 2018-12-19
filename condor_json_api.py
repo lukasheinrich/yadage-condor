@@ -39,7 +39,7 @@ class CondorBackend(object):
 
     def __init__(self,global_state_share = '/afs', backend_share = None):
         self.global_state_share = global_state_share  # hacky for singularity
-        self.backend_share = backend_share or os.path.abspath(os.curdir)
+        self.backend_share = backend_share or os.path.abspath(os.path.join(os.curdir,'condor'))
         self.jobflavor = 'espresso'
         for subdir in ['log','error','output','scripts']:
             d = os.path.join(self.backend_share, subdir)
